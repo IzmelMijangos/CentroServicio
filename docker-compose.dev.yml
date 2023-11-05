@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./CentroServicioBackend/.env.dev
+  
+  backend:
+    build: 
+      context: ./CentroServicioBackend
+      dockerfile: Dockerfile.back.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./CentroServicioBackend:/app_centroservicio_back
+    env_file:
+      - ./CentroServicioBackend/.env.dev
+    depends_on:
+      - postgres
+
+  # frontend: No se ocupa pero de esta manera se podría construir
+  #   build:
+  #     context: ./CentroServicioFrontend
+  #     dockerfile: Dockerfile.front.dev
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./CentroServicioFrontend:/app_centroservicio_front
+  #   env_file:
+  #     - ./CentroServicioFrontend/.env.dev
+
+  nginx:
+    image: nginx:1.24.0
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.dev.conf:/etc/nginx/conf.d/default.conf
+      - ./CentroServicioBackend/static:/app_centroservicio_back/static
+      - ./CentroServicioFrontend/build:/app_centroservicio_front/build
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

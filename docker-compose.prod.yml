@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  
+  backend:
+    build: 
+      context: ./CentroServicioBackend
+      dockerfile: Dockerfile.back.prod
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./CentroServicioBackend/.env.prod
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx.prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
