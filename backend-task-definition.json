@@ -1,0 +1,18 @@
+{
+    "family": "mi-aplicacion-backend",
+    "containerDefinitions": [
+      {
+        "name": "backend-container",
+        "image": "nombre_de_la_imagen_backend:tag",
+        "essential": true,
+        "cpu": 256,  
+        "memory": 512, 
+        "portMappings": [
+          {
+            "containerPort": 8080,
+            "hostPort": 8080
+          }
+        ]
+      }
+    ]
+  }
